@@ -34,8 +34,6 @@ I developed this service to enable my sister, Chiara, to independently play with
 https://www.linkedin.com/feed/update/urn:li:activity:6668395321850134528/ 
 [a higher quality video is available here: https://youtu.be/4ejiA0Va988]
 
-An enormous thanks to Google for enabling developers to easily create assistive and accessible software thanks to the great Android APIs.
-
 # Functioning
 The service works as follows:
 - The user activates the service from the Accessibility Settings of the Android device
