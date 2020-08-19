@@ -1,12 +1,16 @@
 # Metadata
 Name:	ChiaraSelect2Speak
+
 Author: Luca Randazzo
-Date:   July 2020
+
+Date:   July 2020.
 
 ## License
 GNU GPLv3
 This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, version 3 of the License.
+
 This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
 See the GNU General Public License for more details here: https://www.gnu.org/licenses/.
 
 # Information
@@ -29,6 +33,7 @@ Repository: https://github.com/HackaHealth-Geneva/ChiaraSelect2Speak
 I developed this service to enable my sister, Chiara, to independently play with her favourite videogames. Find below a short summary post and video :)
 https://www.linkedin.com/feed/update/urn:li:activity:6668395321850134528/ 
 [a higher quality video is available here: https://youtu.be/4ejiA0Va988]
+
 An enormous thanks to Google for enabling developers to easily create assistive and accessible software thanks to the great Android APIs.
 
 # Functioning
