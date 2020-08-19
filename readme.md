@@ -3,7 +3,7 @@ Name:	ChiaraSelect2Speak
 
 Author: Luca Randazzo
 
-Date:   July 2020.
+Date:   July 2020
 
 ## License
 GNU GPLv3
