@@ -30,9 +30,9 @@ The service has been successfully tested under:
 Repository: https://github.com/HackaHealth-Geneva/ChiaraSelect2Speak
 
 ## Inspiration
-I developed this service to enable my sister, Chiara, to independently play with her favourite videogames. Find below a short summary post and video :)
+I developed this service to enable my sister, Chiara, to independently play with her favourite videogames. Find below a short summary post :)
+
 https://www.linkedin.com/feed/update/urn:li:activity:6668395321850134528/ 
-[a higher quality video is available here: https://youtu.be/4ejiA0Va988]
 
 # Functioning
 The service works as follows:
