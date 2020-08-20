@@ -43,6 +43,26 @@ The service works as follows:
 - The user drags his/her finger on the screen (i.e. on the screenshot) to draw a rectangle around the area of interest
 - The service crops the screenshot to the area of interest, and it applies OCR and TTS in order to recognize the text inside the cropped image and speak it out loud
 
+# ToDo
+Below, some ideas for improvement of this service are provided.
+
+## OCR
+- Automated speaking of text within an area of interest, also if not all of the text has been selected by the user, or the user simply clicked on the text instead of creating a selection rectangle.
+This could help users who are not able to finely create a selection rectangle (e.g. with impaired fine motor control) to use the service.
+The "Android Select to Speak" service implements something similar.
+
+## UI
+- The UI button ("Start") should be movable by the user around the screen, not to cover potential areas of interest. The "Android Select to Speak" service implements this feature. 
+- The UI should enable to Stop the TTS-engine (e.g. if a very large section of text has been selected, which is not of interest any longer). Potentially, Pause/Rewind features could be implemented as well.
+The "Android Select to Speak" service implements similar features. 
+
+## Language and Locale
+- Select the locale of the TTS-engine.
+- Provide error messages and debug information to the user through the TTS-engine in the selected locale.
+
+## Goodies
+- Select welcome message by TTS-engine.
+
 # Resources
 Many freely-available resources were used for the development of this service.
 An enormous thanks to Google for providing lots of advanced functions and easy-to-use APIs through their Android OS, and many thanks to the developers whose code helped to create several parts of this service.
@@ -89,23 +109,3 @@ Following, a non-comprehensive list of some of these inspiring resources is prov
 ### Draw overlay
 - https://stackoverflow.com/questions/4481226/creating-a-system-overlay-window-always-on-top
 - http://android-er.blogspot.com/2013/09/detect-touch-and-draw-rect-on-bitmap.html
-
-# ToDo
-Below, some ideas for improvement of this service are provided.
-
-## OCR
-- Automated speaking of text within an area of interest, also if not all of the text has been selected by the user, or the user simply clicked on the text instead of creating a selection rectangle.
-This could help users who are not able to finely create a selection rectangle (e.g. with impaired fine motor control) to use the service.
-The "Android Select to Speak" service implements something similar.
-
-## UI
-- The UI button ("Start") should be movable by the user around the screen, not to cover potential areas of interest. The "Android Select to Speak" service implements this feature. 
-- The UI should enable to Stop the TTS-engine (e.g. if a very large section of text has been selected, which is not of interest any longer). Potentially, Pause/Rewind features could be implemented as well.
-The "Android Select to Speak" service implements similar features. 
-
-## Language and Locale
-- Select the locale of the TTS-engine.
-- Provide error messages and debug information to the user through the TTS-engine in the selected locale.
-
-## Goodies
-- Select welcome message by TTS-engine.
