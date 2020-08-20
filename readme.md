@@ -6,34 +6,36 @@ Author: Luca Randazzo
 Date:   July 2020
 
 # Information
-## Short description
-ChiaraSelect2Speak is an Android accessibility service that enables to read out loud the text inside a user-selected area of the screen.
+## Description
+"ChiaraSelect2Speak" is an Android accessibility service that enables to read out loud the text inside a user-selected area of the screen.
 When active, the service overlays on top of any visible content on the screen, allowing to transform text it into a spoken message through OCR and TTS functionalities.
 
 The service is inspired by the super cool Android "Select to Speak" accessibility service (https://support.google.com/accessibility/android/answer/7349565?hl=en).
 However, differently than the latter, this service as well enables to read text which is not directly exposed to the Android operating system, e.g. the text inside apps and videogames.
 
-Demo video: https://youtu.be/mUp831sS0lo
-
-The service has been successfully tested under:
-- Galaxy Tab A (2016) [SM-T585]
-- Android: 8.10 (Oreo) [API level: 27]
-
-Repository: https://github.com/HackaHealth-Geneva/ChiaraSelect2Speak
+The project is hosted here: https://github.com/HackaHealth-Geneva/ChiaraSelect2Speak
 
 ## Inspiration
-I developed this service to enable my sister, Chiara, to independently play with her favourite videogames. Find below a short summary post :)
+I developed this service to enable my sister, Chiara, to independently play with her favourite videogames.
+
+Read here a summary post :)
 
 https://www.linkedin.com/feed/update/urn:li:activity:6668395321850134528/ 
 
 # Functioning
+Demo video: https://youtu.be/mUp831sS0lo
+
 The service works as follows:
 - The user activates the service from the Accessibility Settings of the Android device
 - Once active, a "Start" button is showed on top of other apps
 - When the user presses the button, the service takes a screenshot of the whole screen
 - The screenshot is overlayed on top of the screen
-- The user drags his/her finger on the screen (i.e. on the screenshot) to draw a rectangle around the area of interest
+- The user can then drags his/her finger on the screen to draw a selection rectangle around the area of interest. A simple UI shows the rectangle being drawn
 - The service crops the screenshot to the area of interest, and it applies OCR and TTS in order to recognize the text inside the cropped image and speak it out loud
+
+The service has been successfully tested under:
+- Galaxy Tab A (2016) [SM-T585]
+- Android: 8.10 (Oreo) [API level: 27]
 
 # ToDo
 Below, some ideas for improvement of this service are provided.
