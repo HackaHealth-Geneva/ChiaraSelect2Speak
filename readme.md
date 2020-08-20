@@ -36,6 +36,7 @@ The service works as follows:
 The service has been successfully tested under:
 - Galaxy Tab A (2016) [SM-T585]
 - Android: 8.10 (Oreo) [API level: 27]
+- Compiled with Android Studio 4.0.1
 
 # ToDo
 Below, some ideas for improvement of this service are provided.
