@@ -1,3 +1,7 @@
+/*
+Copyright (C) Unknown
+*/
+
 package com.chiara.accessibilityservices;
 
 import android.Manifest;
