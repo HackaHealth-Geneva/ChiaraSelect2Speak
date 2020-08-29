@@ -20,9 +20,7 @@ The project is hosted here: https://github.com/HackaHealth-Geneva/ChiaraSelect2S
 ## Inspiration
 I developed this service to enable my sister, Chiara, to independently play with her favourite videogames.
 
-Read here a summary post :)
-
-https://www.linkedin.com/feed/update/urn:li:activity:6668395321850134528/ 
+Read a summary post of the inspiration behind this project here: https://www.linkedin.com/feed/update/urn:li:activity:6668395321850134528/ <3
 
 # Functioning
 Demo video: https://youtu.be/mUp831sS0lo
