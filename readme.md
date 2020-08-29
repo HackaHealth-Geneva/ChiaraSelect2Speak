@@ -5,6 +5,8 @@ Author: Luca Randazzo
 
 Date:   July 2020
 
+email:  hackahealth.geneva@gmail.com
+
 # Information
 ## Description
 "ChiaraSelect2Speak" is an Android accessibility service that enables to read out loud the text inside a user-selected area of the screen.
