@@ -44,16 +44,23 @@ import com.google.android.gms.vision.text.TextBlock;
 import com.google.android.gms.vision.text.TextRecognizer;
 
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Locale;
 
 /* This service provides an entry point to the Chiara_Select2Speak service. */
 public class MainService extends AccessibilityService implements View.OnTouchListener {
     // service name used inside logs
-    private static final String DEBUG_TAG = " [Chiara_MainService]";
+    private static final String DEBUG_TAG = "[Chiara_MainService]";
 
     // service status variables
     private boolean service_active = false;
     private boolean first_setup = true;
+
+    // service path
+    private static String PATH;
 
     // layout
     FrameLayout mLayout;
@@ -67,7 +74,6 @@ public class MainService extends AccessibilityService implements View.OnTouchLis
     Paint paint;
 
     // screenshot
-    private static String SCREENSHOTS_DIRECTORY;
     private static int DELAY_SCREENSHOT = 1000; // delay [ms] to wait for ScreenshotActivity to capture all images
     Bitmap latest_screenshot_bitmap;
 
@@ -77,6 +83,9 @@ public class MainService extends AccessibilityService implements View.OnTouchLis
     // TextToSpeech engine
     private TextToSpeech tts;
     boolean remove_newlines = true;
+
+    // MyLog class
+    MyLog my_log;
 
     // goodies
     String tts_welcome_message = "Ciao scimmiotta, ti voglio bene da Luca";
@@ -88,8 +97,28 @@ public class MainService extends AccessibilityService implements View.OnTouchLis
     //
     //@SuppressLint("ResourceType")
     @Override protected void onServiceConnected() {
-        // print first messages
-        Log.i(DEBUG_TAG, "[onServiceConnected] Hello world! Setting-up...");;
+        // ---------------------------------------------------------------
+        // Setup PATH and MyLog
+        // ---------------------------------------------------------------
+        File externalFilesDir = getExternalFilesDir(null);
+        if (externalFilesDir != null) {
+            PATH = externalFilesDir.getAbsolutePath() + "/";
+            my_log = new MyLog(PATH);
+
+            Log.i(DEBUG_TAG, "[onServiceConnected] PATH initialized to: " + PATH);
+            my_log.i(DEBUG_TAG, "[onServiceConnected] PATH initialized to: " + PATH);
+        }
+        else {
+            Log.e(DEBUG_TAG, "[onServiceConnected] Failed to create file storage directory, getExternalFilesDir() returned null.");
+            return;
+        }
+
+
+        // ---------------------------------------------------------------
+        // Say hello :)
+        // ---------------------------------------------------------------
+        Log.i(DEBUG_TAG, "[onServiceConnected] Hello world! Setting-up...");
+        my_log.i(DEBUG_TAG, "[onServiceConnected] Hello world! Setting-up...");
 
 
         // ---------------------------------------------------------------
@@ -107,6 +136,7 @@ public class MainService extends AccessibilityService implements View.OnTouchLis
             // available. The detectors will automatically become operational once the library
             // downloads complete on device.
             Log.e(DEBUG_TAG, "[onServiceConnected] Detector dependencies are not available");
+            my_log.e(DEBUG_TAG, "[onServiceConnected] Detector dependencies are not available");
 
             // Check for low storage.  If there is low storage, the native library will not be
             // downloaded, so detection will not become operational.
@@ -116,26 +146,20 @@ public class MainService extends AccessibilityService implements View.OnTouchLis
             if (hasLowStorage) {
                 Toast.makeText(this, "[onServiceConnected] Low storage space available", Toast.LENGTH_LONG).show();
                 Log.e(DEBUG_TAG, "[onServiceConnected] Low storage space available");
+                my_log.e(DEBUG_TAG, "[onServiceConnected] Low storage space available");
             }
         }
         else {
             Log.i(DEBUG_TAG, "[onServiceConnected] OCR correctly setup");
+            my_log.i(DEBUG_TAG, "[onServiceConnected] OCR correctly setup");
         }
 
 
         // ---------------------------------------------------------------
         // Setup Screenshoter
         // ---------------------------------------------------------------
-        File externalFilesDir = getExternalFilesDir(null);
-        if (externalFilesDir != null) {
-            SCREENSHOTS_DIRECTORY = externalFilesDir.getAbsolutePath() + "/";
-        }
-        else {
-            Log.e(DEBUG_TAG, "[onServiceConnected] Failed to create file storage directory, getExternalFilesDir is null.");
-            return;
-        }
         // delete previous screenshots
-        deleteFilesInFolder(SCREENSHOTS_DIRECTORY);
+        deletePNGFilesInFolder(PATH);
         // get first screenshot, to setup activity and ask for permissions
         takeScreenshot();
 
@@ -154,15 +178,19 @@ public class MainService extends AccessibilityService implements View.OnTouchLis
         final Button button_stop = (Button) mLayout.findViewById(R.id.stop);
         button_stop.setVisibility(View.GONE);
         Log.i(DEBUG_TAG, "[onServiceConnected] mLayout setup");
+        my_log.i(DEBUG_TAG, "[onServiceConnected] mLayout setup");
 
         // Wait for takeScreenshot() to finish his job
         Log.i(DEBUG_TAG, "[onServiceConnected] Waiting for takeScreenshot() to return...");
+        my_log.i(DEBUG_TAG, "[onServiceConnected] Waiting for takeScreenshot() to return...");
+
         final Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
                 // info
                 Log.i(DEBUG_TAG, "[onServiceConnected] DELAY_SCREENSHOT elapsed");
+                my_log.i(DEBUG_TAG, "[onServiceConnected] DELAY_SCREENSHOT elapsed");
 
                 // load latest screenshot
                 latest_screenshot_bitmap = loadScreenshotBitmap();
@@ -194,9 +222,11 @@ public class MainService extends AccessibilityService implements View.OnTouchLis
                     paint.setStrokeWidth(10);
 
                     Log.i(DEBUG_TAG, "[onServiceConnected] Drawing objects setup");
+                    my_log.i(DEBUG_TAG, "[onServiceConnected] Drawing objects setup");
                 }
                 else {
                     Log.e(DEBUG_TAG, "[onServiceConnected] screenshot not loaded successfully");
+                    my_log.e(DEBUG_TAG, "[onServiceConnected] screenshot not loaded successfully");
                 }
             }//run handler
         }, 2000 );
@@ -205,10 +235,12 @@ public class MainService extends AccessibilityService implements View.OnTouchLis
         image_view = (ImageView) mLayout.findViewById(R.id.image_view);
         image_view.setVisibility(View.GONE);
         Log.i(DEBUG_TAG, "[onServiceConnected] Images setup");
+        my_log.i(DEBUG_TAG, "[onServiceConnected] Images setup");
 
         // configure buttons
         configureButtons();
         Log.i(DEBUG_TAG, "[onServiceConnected] Buttons setup");
+        my_log.i(DEBUG_TAG, "[onServiceConnected] Buttons setup");
 
 
         // ---------------------------------------------------------------
@@ -216,6 +248,7 @@ public class MainService extends AccessibilityService implements View.OnTouchLis
         // ---------------------------------------------------------------
         mLayout.setOnTouchListener(this);
         Log.i(DEBUG_TAG, "[onServiceConnected] OnTouchListener setup");
+        my_log.i(DEBUG_TAG, "[onServiceConnected] OnTouchListener setup");
 
 
         // ---------------------------------------------------------------
@@ -227,10 +260,13 @@ public class MainService extends AccessibilityService implements View.OnTouchLis
             public void onInit(final int status) {
                 if (status == TextToSpeech.SUCCESS) {
                     Log.i(DEBUG_TAG, "[onServiceConnected] Text to speech engine started successfully");
+                    my_log.i(DEBUG_TAG, "[onServiceConnected] Text to speech engine started successfully");
+
                     tts.setLanguage(Locale.ITALIAN);
                 }
                 else {
                     Log.e(DEBUG_TAG, "[onServiceConnected] Error starting the Text to speech engine");
+                    my_log.e(DEBUG_TAG, "[onServiceConnected] Error starting the Text to speech engine");
                 }
             }
         };
@@ -241,6 +277,8 @@ public class MainService extends AccessibilityService implements View.OnTouchLis
         // Finish setup
         // ---------------------------------------------------------------
         Log.i(DEBUG_TAG, "[onServiceConnected] Setup done");
+        my_log.i(DEBUG_TAG, "[onServiceConnected] Setup done");
+
         Toast.makeText(getBaseContext(),"Chiara_Select2Speak active!", Toast.LENGTH_SHORT).show();
 
         if (lovely_start) {
@@ -263,10 +301,13 @@ public class MainService extends AccessibilityService implements View.OnTouchLis
             @Override
             public void onClick(View view) {
                 Log.i(DEBUG_TAG, "[configureButtons::button_start::onClick] Pressed 'Start'");
+                my_log.i(DEBUG_TAG, "[configureButtons::button_start::onClick] Pressed 'Start'");
+
                 Log.i(DEBUG_TAG, "[configureButtons::button_start::onClick] Setting screenshot as background...");
+                my_log.i(DEBUG_TAG, "[configureButtons::button_start::onClick] Setting screenshot as background...");
 
                 // Delete previous screenshots
-                deleteFilesInFolder(SCREENSHOTS_DIRECTORY);
+                deletePNGFilesInFolder(PATH);
 
                 // Take new screenshot
                 takeScreenshot();
@@ -281,6 +322,7 @@ public class MainService extends AccessibilityService implements View.OnTouchLis
                     public void run() {
                         // info
                         Log.i(DEBUG_TAG, "[configureButtons::button_start::onClick] DELAY_SCREENSHOT elapsed");
+                        my_log.i(DEBUG_TAG, "[configureButtons::button_start::onClick] DELAY_SCREENSHOT elapsed");
 
                         // load latest screenshot
                         latest_screenshot_bitmap = loadScreenshotBitmap();
@@ -308,6 +350,7 @@ public class MainService extends AccessibilityService implements View.OnTouchLis
 
                         //
                         Log.i(DEBUG_TAG, "[configureButtons::button_start::onClick] Screenshot set as background");
+                        my_log.i(DEBUG_TAG, "[configureButtons::button_start::onClick] Screenshot set as background");
                     }//run handler
                 }, DELAY_SCREENSHOT);
             }
@@ -317,6 +360,7 @@ public class MainService extends AccessibilityService implements View.OnTouchLis
             @Override
             public void onClick(View view) {
                 Log.i(DEBUG_TAG, "[configureButtons::button_stop::onClick] Pressed 'Stop'");
+                my_log.i(DEBUG_TAG, "[configureButtons::button_stop::onClick] Pressed 'Stop'");
 
                 // setup service status
                 //setupServiceStatus( !service_active );
@@ -470,6 +514,8 @@ public class MainService extends AccessibilityService implements View.OnTouchLis
                     }
                     else {
                         Log.e(DEBUG_TAG, "[processMotionEvent] null bitmap");
+                        my_log.e(DEBUG_TAG, "[processMotionEvent] null bitmap");
+
                         tts.speak("No bitmap", TextToSpeech.QUEUE_ADD, null, "DEFAULT");
                     }
 
@@ -496,7 +542,8 @@ public class MainService extends AccessibilityService implements View.OnTouchLis
                 break;
 
             default:
-                Log.w(DEBUG_TAG, "[onTouch] Unknown action");;
+                Log.w(DEBUG_TAG, "[onTouch] Unknown action");
+                my_log.w(DEBUG_TAG, "[onTouch] Unknown action");
         }//switch case
     }
 
@@ -524,6 +571,8 @@ public class MainService extends AccessibilityService implements View.OnTouchLis
 
         //Log.i(DEBUG_TAG, "Action " + event.getAction() + " - x " + String.format("%.2f", event.getRawX()) + ", y " + String.format("%.2f", event.getRawY()) );
         Log.i(DEBUG_TAG, "[printMotionEvent] " + current_action_string + " - x " + String.format("%.2f", event.getRawX()) + ", y " + String.format("%.2f", event.getRawY()) );
+        my_log.i(DEBUG_TAG, "[printMotionEvent] " + current_action_string + " - x " + String.format("%.2f", event.getRawX()) + ", y " + String.format("%.2f", event.getRawY()) );
+
         //Log.i(DEBUG_TAG, "[printMotionEvent] " + current_action_string + " - x " + event.getRawX() + ", y " + event.getRawY() );
 
         //
@@ -539,55 +588,90 @@ public class MainService extends AccessibilityService implements View.OnTouchLis
         Log.i(DEBUG_TAG," "); */
     }
 
+    void deletePNGFilesInFolder(String folder) {
+        File dir = new File(folder);
+
+        if ( dir.isDirectory() ) {
+            String[] children = dir.list();
+            int j=0;
+
+            for (int i=0; i<children.length; i++) {
+                // get file
+                File this_file = new File(dir, children[i]);
+
+                if ( (this_file.toString()).contains("png") ) {
+                    new File(dir, children[i]).delete();
+                    j = j+1;
+
+                    Log.i(DEBUG_TAG, "[deleteFilesInFolder] Deleted file: " + this_file.toString());
+                    my_log.i(DEBUG_TAG, "[deleteFilesInFolder] Deleted file: " + this_file.toString());
+                }
+            }
+            //Log.i(DEBUG_TAG, "[deleteFilesInFolder] Deleted " + j + " png files in folder: " + folder);
+        }
+    }
+
     void takeScreenshot() {
         Intent dialogIntent = new Intent(this, ScreenshotActivity.class);
         dialogIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(dialogIntent);
-        Log.i(DEBUG_TAG, "[takeScreenshot] takeScreenshot() returned");
-    }
 
-    void deleteFilesInFolder(String folder) {
-        File dir = new File(folder);
-        if ( dir.isDirectory() ) {
-            String[] children = dir.list();
-            for (int i=0; i<children.length; i++) {
-                new File(dir, children[i]).delete();
-            }
-            Log.i(DEBUG_TAG, "[deleteFilesInFolder] Deleted " + children.length + " files in folder: " + folder);
-        }
+        Log.i(DEBUG_TAG, "[takeScreenshot] takeScreenshot() returned");
+        my_log.i(DEBUG_TAG, "[takeScreenshot] takeScreenshot() returned");
     }
 
     Bitmap loadScreenshotBitmap() {
-        File dir = new File(SCREENSHOTS_DIRECTORY); // get screenshots directory
+        File dir = new File(PATH); // get screenshots directory
 
         if ( dir.isDirectory() ) {
-            String[] children = dir.list();         // get all files
-            int Nscreenshots = children.length;     // get N of files
-            Log.i(DEBUG_TAG, "[loadScreenshotBitmap] Found " + Nscreenshots + " screenshots");
+            // get all files
+            String[] children = dir.list();
+            int Nscreenshots = 0;
 
+            // get png files
+            for (int i=0; i<children.length; i++) {
+                // get file
+                File this_file = new File(dir, children[i]);
+
+                if ( (this_file.toString()).contains("png") ) {
+                    Nscreenshots = Nscreenshots+1;
+                }
+            }
+
+            // info
+            Log.i(DEBUG_TAG, "[loadScreenshotBitmap] Found " + Nscreenshots + " screenshots");
+            my_log.i(DEBUG_TAG, "[loadScreenshotBitmap] Found " + Nscreenshots + " screenshots");
+
+            // load screenshot
             if (Nscreenshots > 0) {
                 //String screenshot_filename = SCREENSHOTS_DIRECTORY + (Nscreenshots-1) + ".png";
-                String screenshot_filename = SCREENSHOTS_DIRECTORY + "0" + ".png"; // get filename of first screenshot
+                String screenshot_filename = PATH + "0" + ".png"; // get filename of first screenshot
 
                 // get screenshot
                 File screenshot_file = new File(screenshot_filename);
 
                 if( screenshot_file.exists() ) {
                     Log.i(DEBUG_TAG, "[loadScreenshotBitmap] Loaded screenshot " +  screenshot_filename);
+                    my_log.i(DEBUG_TAG, "[loadScreenshotBitmap] Loaded screenshot " +  screenshot_filename);
+
                     Bitmap screenshot_bitmap = BitmapFactory.decodeFile(screenshot_file.getAbsolutePath());
                     return screenshot_bitmap;
                 }
                 else {
                     Log.w(DEBUG_TAG, "[loadScreenshotBitmap] Screenshot does not exist.");
+                    my_log.w(DEBUG_TAG, "[loadScreenshotBitmap] Screenshot does not exist.");
                 }
             }
             else {
                 Log.e(DEBUG_TAG, "[loadScreenshotBitmap] no screenshot found. Increase DELAY_SCREENSHOT!");
+                my_log.e(DEBUG_TAG, "[loadScreenshotBitmap] no screenshot found. Increase DELAY_SCREENSHOT!");
+
                 tts.speak("No screenshot", TextToSpeech.QUEUE_ADD, null, "DEFAULT");
             }
         }
         else {
             Log.e(DEBUG_TAG, "[loadScreenshotBitmap] no screenshot directory found!");
+            my_log.e(DEBUG_TAG, "[loadScreenshotBitmap] no screenshot directory found!");
         }
         return null;
     }
@@ -678,18 +762,24 @@ public class MainService extends AccessibilityService implements View.OnTouchLis
 
                     //
                     Log.i(DEBUG_TAG, "[bitmapToSpeech] Text being spoken: " + current_string);
+                    my_log.i(DEBUG_TAG, "[bitmapToSpeech] Text being spoken: " + current_string);
+
                     while ( tts.isSpeaking() ) {
                         // Log.i(DEBUG_TAG, "[bitmapToSpeech] TTS is speaking...");
                     }
                 }
                 else {
                     Log.w(DEBUG_TAG, "[bitmapToSpeech] Text data is null");
+                    my_log.w(DEBUG_TAG, "[bitmapToSpeech] Text data is null");
                 }
             }
             Log.i(DEBUG_TAG, "[bitmapToSpeech] All selected text has been spoken");
+            my_log.i(DEBUG_TAG, "[bitmapToSpeech] All selected text has been spoken");
         }
         else {
             Log.w(DEBUG_TAG, "[bitmapToSpeech] No text found");
+            my_log.w(DEBUG_TAG, "[bitmapToSpeech] No text found");
+
             tts.speak("Nessun testo trovato", TextToSpeech.QUEUE_ADD, null, "DEFAULT");
         }
     }
@@ -698,7 +788,10 @@ public class MainService extends AccessibilityService implements View.OnTouchLis
         // info
         if (verbose_ontouch) {
             Log.i(DEBUG_TAG, "[draw] x0 " + x0          + ", y0 " + y0 );
+            my_log.i(DEBUG_TAG, "[draw] x0 " + x0          + ", y0 " + y0 );
+
             Log.i(DEBUG_TAG, "[draw] xC " + current_x   + ", yC " + current_y );
+            my_log.i(DEBUG_TAG, "[draw] xC " + current_x   + ", yC " + current_y );
         }
 
         // clear canvasDrawingPane
@@ -707,5 +800,74 @@ public class MainService extends AccessibilityService implements View.OnTouchLis
         // draw rectangle
         canvasDrawingPane.drawRoundRect(x0, y0, current_x, current_y, 25, 25, paint);
         image_view.invalidate();
+    }
+
+}//class MainService
+
+
+class MyLog {
+    // log file
+    File log_file;
+    FileWriter log_file_writer;
+
+    // time info
+    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd HH:mm");
+
+    MyLog(String PATH) {
+        log_file = new File(PATH, dateFormat.format( new Date() ) + "_MyLog.txt");
+        try {
+            log_file_writer = new FileWriter(log_file);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        if (log_file != null) {
+            i("[MyLog]", "Log file created at path: " + log_file.getAbsolutePath());
+        }
+    }
+
+    void i(String tag, String msg) {
+        try {
+            log_file_writer.append( dateFormat.format( new Date() ) );
+            log_file_writer.append(" I/");
+            log_file_writer.append(tag);
+            log_file_writer.append(": ");
+            log_file_writer.append(msg);
+            log_file_writer.append("\n");
+            log_file_writer.flush();
+            //log_file_writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    void w(String tag, String msg) {
+        try {
+            log_file_writer.append( dateFormat.format( new Date() ) );
+            log_file_writer.append(" W/");
+            log_file_writer.append(tag);
+            log_file_writer.append(": ");
+            log_file_writer.append(msg);
+            log_file_writer.append("\n");
+            log_file_writer.flush();
+            //log_file_writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    void e(String tag, String msg) {
+        try {
+            log_file_writer.append( dateFormat.format( new Date() ) );
+            log_file_writer.append(" E/");
+            log_file_writer.append(tag);
+            log_file_writer.append(": ");
+            log_file_writer.append(msg);
+            log_file_writer.append("\n");
+            log_file_writer.flush();
+            //log_file_writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

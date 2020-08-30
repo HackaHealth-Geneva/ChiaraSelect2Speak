@@ -35,7 +35,7 @@ import java.nio.ByteBuffer;
 public class ScreenshotActivity extends Activity {
 
     //private static final String DEBUG_TAG = ScreenshotActivity.class.getName();
-    private static final String DEBUG_TAG = " [Chiara_ScreenshotActivity]";
+    private static final String DEBUG_TAG = "[Chiara_ScreenshotActivity]";
 
     private static final int REQUEST_CODE = 100;
     private static String SCREENSHOTS_DIRECTORY;

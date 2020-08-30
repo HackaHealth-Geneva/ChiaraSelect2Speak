@@ -11,7 +11,6 @@
             android:theme="@android:style/Theme.Translucent.NoTitleBar">
         </activity>
 
-        <activity android:name=".MainService" />
         <service
             android:name=".MainService"
             android:description="@string/description"
