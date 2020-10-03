@@ -15,7 +15,9 @@
 -->
 
 <resources>
+    <string name="title">Chiara_Select2Speak</string>
+    <string name="description">This is a very cool service!</string>
+
     <string name="start">Start</string>
     <string name="stop">Stop</string>
-    <string name="description">Test Description ABC</string>
 </resources>
