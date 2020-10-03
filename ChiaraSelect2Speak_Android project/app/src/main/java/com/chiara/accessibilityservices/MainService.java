@@ -303,13 +303,14 @@ public class MainService extends AccessibilityService implements View.OnTouchLis
                 Log.i(DEBUG_TAG, "[configureButtons::button_start::onClick] Pressed 'Start'");
                 my_log.i(DEBUG_TAG, "[configureButtons::button_start::onClick] Pressed 'Start'");
 
-                Log.i(DEBUG_TAG, "[configureButtons::button_start::onClick] Setting screenshot as background...");
-                my_log.i(DEBUG_TAG, "[configureButtons::button_start::onClick] Setting screenshot as background...");
-
                 // Delete previous screenshots
+                Log.i(DEBUG_TAG, "[configureButtons::button_start::onClick] Deleting existing screenshots...");
+                my_log.i(DEBUG_TAG, "[configureButtons::button_start::onClick] Deleting existing screenshots...");
                 deletePNGFilesInFolder(PATH);
 
                 // Take new screenshot
+                Log.i(DEBUG_TAG, "[configureButtons::button_start::onClick] Taking new screenshot...");
+                my_log.i(DEBUG_TAG, "[configureButtons::button_start::onClick] Taking new screenshot...");
                 takeScreenshot();
 
                 // setup service status
@@ -327,30 +328,40 @@ public class MainService extends AccessibilityService implements View.OnTouchLis
                         // load latest screenshot
                         latest_screenshot_bitmap = loadScreenshotBitmap();
 
-                        // set bitmap as background
                         if (latest_screenshot_bitmap != null) {
-                            image_view.setImageBitmap(latest_screenshot_bitmap);
-                        }
+                            Toast.makeText(getBaseContext(),"GO :)", Toast.LENGTH_SHORT).show();
 
-                        Bitmap.Config config;
-                        if (latest_screenshot_bitmap.getConfig() != null) {
-                            config = latest_screenshot_bitmap.getConfig();
+                            // set bitmap as background
+                            Log.i(DEBUG_TAG, "[configureButtons::button_start::onClick] Setting screenshot as background...");
+                            my_log.i(DEBUG_TAG, "[configureButtons::button_start::onClick] Setting screenshot as background...");
+                            image_view.setImageBitmap(latest_screenshot_bitmap);
+
+                            Bitmap.Config config;
+                            if (latest_screenshot_bitmap.getConfig() != null) {
+                                config = latest_screenshot_bitmap.getConfig();
+                            }
+                            else {
+                                config = Bitmap.Config.ARGB_8888;
+                            }
+
+                            // Create bitmap of same size for drawing
+                            bitmapDrawingPane = Bitmap.createBitmap(
+                                    latest_screenshot_bitmap.getWidth(),
+                                    latest_screenshot_bitmap.getHeight(),
+                                    config);
+                            canvasDrawingPane = new Canvas(bitmapDrawingPane);
+                            image_view.setImageBitmap(bitmapDrawingPane);
+
+                            //
+                            Log.i(DEBUG_TAG, "[configureButtons::button_start::onClick] Screenshot set as background");
+                            my_log.i(DEBUG_TAG, "[configureButtons::button_start::onClick] Screenshot set as background");
                         }
                         else {
-                            config = Bitmap.Config.ARGB_8888;
+                            setupServiceStatus( !service_active );
+
+                            Log.i(DEBUG_TAG, "[configureButtons::button_start::onClick] No screenshot");
+                            my_log.i(DEBUG_TAG, "[configureButtons::button_start::onClick] No screenshot");
                         }
-
-                        //Create bitmap of same size for drawing
-                        bitmapDrawingPane = Bitmap.createBitmap(
-                                latest_screenshot_bitmap.getWidth(),
-                                latest_screenshot_bitmap.getHeight(),
-                                config);
-                        canvasDrawingPane = new Canvas(bitmapDrawingPane);
-                        image_view.setImageBitmap(bitmapDrawingPane);
-
-                        //
-                        Log.i(DEBUG_TAG, "[configureButtons::button_start::onClick] Screenshot set as background");
-                        my_log.i(DEBUG_TAG, "[configureButtons::button_start::onClick] Screenshot set as background");
                     }//run handler
                 }, DELAY_SCREENSHOT);
             }
@@ -393,6 +404,10 @@ public class MainService extends AccessibilityService implements View.OnTouchLis
             //
             canvasDrawingPane.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
             image_view.setVisibility(View.VISIBLE);
+
+            //
+            Log.i(DEBUG_TAG, "[setupServiceStatus] Service set to active");
+            my_log.i(DEBUG_TAG, "[setupServiceStatus] Service set to active");
         }
         else {
             //button_stop.setVisibility(View.GONE);
@@ -407,6 +422,10 @@ public class MainService extends AccessibilityService implements View.OnTouchLis
             //
             canvasDrawingPane.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
             image_view.setVisibility(View.GONE);
+
+            //
+            Log.i(DEBUG_TAG, "[setupServiceStatus] Service set to not active");
+            my_log.i(DEBUG_TAG, "[setupServiceStatus] Service set to not active");
         }
     }
 
@@ -528,7 +547,6 @@ public class MainService extends AccessibilityService implements View.OnTouchLis
                     }*/
 
                     // --- deactivate service
-
                     //final Button button_stop    = (Button) mLayout.findViewById(R.id.stop);
                     //final Button button_start   = (Button) mLayout.findViewById(R.id.start);
                     while ( tts.isSpeaking() ) {
@@ -616,12 +634,13 @@ public class MainService extends AccessibilityService implements View.OnTouchLis
         dialogIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(dialogIntent);
 
-        Log.i(DEBUG_TAG, "[takeScreenshot] takeScreenshot() returned");
-        my_log.i(DEBUG_TAG, "[takeScreenshot] takeScreenshot() returned");
+        /* Log.i(DEBUG_TAG, "[takeScreenshot] takeScreenshot() returned");
+        my_log.i(DEBUG_TAG, "[takeScreenshot] takeScreenshot() returned"); */
     }
 
     Bitmap loadScreenshotBitmap() {
         File dir = new File(PATH); // get screenshots directory
+        Bitmap screenshot_bitmap = null;
 
         if ( dir.isDirectory() ) {
             // get all files
@@ -654,8 +673,7 @@ public class MainService extends AccessibilityService implements View.OnTouchLis
                     Log.i(DEBUG_TAG, "[loadScreenshotBitmap] Loaded screenshot " +  screenshot_filename);
                     my_log.i(DEBUG_TAG, "[loadScreenshotBitmap] Loaded screenshot " +  screenshot_filename);
 
-                    Bitmap screenshot_bitmap = BitmapFactory.decodeFile(screenshot_file.getAbsolutePath());
-                    return screenshot_bitmap;
+                    screenshot_bitmap = BitmapFactory.decodeFile(screenshot_file.getAbsolutePath());
                 }
                 else {
                     Log.w(DEBUG_TAG, "[loadScreenshotBitmap] Screenshot does not exist.");
@@ -663,8 +681,8 @@ public class MainService extends AccessibilityService implements View.OnTouchLis
                 }
             }
             else {
-                Log.e(DEBUG_TAG, "[loadScreenshotBitmap] no screenshot found. Increase DELAY_SCREENSHOT!");
-                my_log.e(DEBUG_TAG, "[loadScreenshotBitmap] no screenshot found. Increase DELAY_SCREENSHOT!");
+                Log.e(DEBUG_TAG, "[loadScreenshotBitmap] no screenshot found. Increase DELAY_SCREENSHOT or wait a bit more before drawing the selection rectangle!");
+                my_log.e(DEBUG_TAG, "[loadScreenshotBitmap] no screenshot found. Increase DELAY_SCREENSHOT or wait a bit more before drawing the selection rectangle!");
 
                 tts.speak("No screenshot", TextToSpeech.QUEUE_ADD, null, "DEFAULT");
             }
@@ -673,7 +691,13 @@ public class MainService extends AccessibilityService implements View.OnTouchLis
             Log.e(DEBUG_TAG, "[loadScreenshotBitmap] no screenshot directory found!");
             my_log.e(DEBUG_TAG, "[loadScreenshotBitmap] no screenshot directory found!");
         }
-        return null;
+
+        if (screenshot_bitmap != null) {
+            return screenshot_bitmap;
+        }
+        else {
+            return null;
+        }
     }
 
     Bitmap resizeBitmap(Bitmap original) {
