@@ -55,6 +55,9 @@ public class MainService extends AccessibilityService implements View.OnTouchLis
     // service name used inside logs
     private static final String DEBUG_TAG = "[Chiara_MainService]";
 
+    private static final int SUCCESS = 1;
+    private static final int ERROR = -1;
+
     // service status variables
     private boolean service_active = false;
     private boolean first_setup = true;
@@ -300,13 +303,23 @@ public class MainService extends AccessibilityService implements View.OnTouchLis
         button_start.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                int result;
+
                 Log.i(DEBUG_TAG, "[configureButtons::button_start::onClick] Pressed 'Start'");
                 my_log.i(DEBUG_TAG, "[configureButtons::button_start::onClick] Pressed 'Start'");
 
                 // Delete previous screenshots
                 Log.i(DEBUG_TAG, "[configureButtons::button_start::onClick] Deleting existing screenshots...");
                 my_log.i(DEBUG_TAG, "[configureButtons::button_start::onClick] Deleting existing screenshots...");
-                deletePNGFilesInFolder(PATH);
+                result = deletePNGFilesInFolder(PATH);
+                if (result == SUCCESS) {
+                    Log.i(DEBUG_TAG, "[configureButtons::button_start::onClick] Correctly deleted existing screenshots.");
+                    my_log.i(DEBUG_TAG, "[configureButtons::button_start::onClick] Correctly deleted existing screenshots.");
+                }
+                else {
+                    Log.e(DEBUG_TAG, "[configureButtons::button_start::onClick] Error in deleting existing screenshots.");
+                    my_log.e(DEBUG_TAG, "[configureButtons::button_start::onClick] Error in deleting existing screenshots.");
+                }
 
                 // Take new screenshot
                 Log.i(DEBUG_TAG, "[configureButtons::button_start::onClick] Taking new screenshot...");
@@ -359,8 +372,8 @@ public class MainService extends AccessibilityService implements View.OnTouchLis
                         else {
                             setupServiceStatus( !service_active );
 
-                            Log.i(DEBUG_TAG, "[configureButtons::button_start::onClick] No screenshot");
-                            my_log.i(DEBUG_TAG, "[configureButtons::button_start::onClick] No screenshot");
+                            Log.e(DEBUG_TAG, "[configureButtons::button_start::onClick] No screenshot");
+                            my_log.e(DEBUG_TAG, "[configureButtons::button_start::onClick] No screenshot");
                         }
                     }//run handler
                 }, DELAY_SCREENSHOT);
@@ -606,12 +619,13 @@ public class MainService extends AccessibilityService implements View.OnTouchLis
         Log.i(DEBUG_TAG," "); */
     }
 
-    void deletePNGFilesInFolder(String folder) {
+    int deletePNGFilesInFolder(String folder) {
+        int result = ERROR;
+        int j=0;
         File dir = new File(folder);
 
         if ( dir.isDirectory() ) {
             String[] children = dir.list();
-            int j=0;
 
             for (int i=0; i<children.length; i++) {
                 // get file
@@ -627,6 +641,17 @@ public class MainService extends AccessibilityService implements View.OnTouchLis
             }
             //Log.i(DEBUG_TAG, "[deleteFilesInFolder] Deleted " + j + " png files in folder: " + folder);
         }
+
+        //
+        if (j>0) {
+            result = SUCCESS;
+        }
+        else {
+            result = ERROR;
+        }
+
+        //
+        return result;
     }
 
     void takeScreenshot() {
@@ -634,8 +659,8 @@ public class MainService extends AccessibilityService implements View.OnTouchLis
         dialogIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(dialogIntent);
 
-        /* Log.i(DEBUG_TAG, "[takeScreenshot] takeScreenshot() returned");
-        my_log.i(DEBUG_TAG, "[takeScreenshot] takeScreenshot() returned"); */
+        Log.i(DEBUG_TAG, "[takeScreenshot] takeScreenshot() returned");
+        my_log.i(DEBUG_TAG, "[takeScreenshot] takeScreenshot() returned");
     }
 
     Bitmap loadScreenshotBitmap() {
@@ -752,7 +777,9 @@ public class MainService extends AccessibilityService implements View.OnTouchLis
         return screenshot_bitmap_resized;
     }
 
-    void bitmapToSpeech(Bitmap screenshot_bitmap) {
+    int bitmapToSpeech(Bitmap screenshot_bitmap) {
+        int result = ERROR;
+
         // Create frame
         Frame screenshot_frame = new Frame.Builder().setBitmap(screenshot_bitmap).build();
 
@@ -778,8 +805,9 @@ public class MainService extends AccessibilityService implements View.OnTouchLis
                     String current_string = item.getValue();
 
                     // remove newlines (typically due to visual text formatting) to make reading more fluid
-                    if (remove_newlines)
-                        current_string = current_string.replace("\n"," ");
+                    if (remove_newlines) {
+                        current_string = current_string.replace("\n", " ");
+                    }
 
                     // Speak the string
                     tts.speak(current_string, TextToSpeech.QUEUE_ADD, null, "DEFAULT");
@@ -791,21 +819,33 @@ public class MainService extends AccessibilityService implements View.OnTouchLis
                     while ( tts.isSpeaking() ) {
                         // Log.i(DEBUG_TAG, "[bitmapToSpeech] TTS is speaking...");
                     }
+
+                    //
+                    Log.i(DEBUG_TAG, "[bitmapToSpeech] All selected text has been spoken");
+                    my_log.i(DEBUG_TAG, "[bitmapToSpeech] All selected text has been spoken");
+
+                    //
+                    result = SUCCESS;
                 }
                 else {
+                    result = ERROR;
+
                     Log.w(DEBUG_TAG, "[bitmapToSpeech] Text data is null");
                     my_log.w(DEBUG_TAG, "[bitmapToSpeech] Text data is null");
                 }
             }
-            Log.i(DEBUG_TAG, "[bitmapToSpeech] All selected text has been spoken");
-            my_log.i(DEBUG_TAG, "[bitmapToSpeech] All selected text has been spoken");
         }
         else {
+            result = ERROR;
+
             Log.w(DEBUG_TAG, "[bitmapToSpeech] No text found");
             my_log.w(DEBUG_TAG, "[bitmapToSpeech] No text found");
 
             tts.speak("Nessun testo trovato", TextToSpeech.QUEUE_ADD, null, "DEFAULT");
         }
+
+        //
+        return result;
     }
 
     void drawRectangle() {
@@ -827,7 +867,6 @@ public class MainService extends AccessibilityService implements View.OnTouchLis
     }
 
 }//class MainService
-
 
 class MyLog {
     // log file
@@ -894,4 +933,4 @@ class MyLog {
             e.printStackTrace();
         }
     }
-}
+}//class MyLog
