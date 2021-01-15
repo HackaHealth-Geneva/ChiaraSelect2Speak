@@ -19,7 +19,7 @@ Differenlty than the latter, our service enables to process also text that is no
 The project is hosted here: https://github.com/HackaHealth-Geneva/ChiaraSelect2Speak
 
 ## Inspiration
-I developed this service to enable my sister, Chiara, to independently play with her favourite videogames and understand the content of the text inside them :)
+I developed this service to enable my sister, Chiara, to independently play with her favourite videogames and understand the content of their text :)
 
 Read a summary post of the inspiration behind this project here: https://www.linkedin.com/feed/update/urn:li:activity:6668395321850134528/ <3
 
