@@ -45,17 +45,17 @@ Some ideas for improvement are provided below.
 ## OCR
 - "Intelligent" speaking-out-loud of text "around" the user-selected area of interest
 - Speaking-out-loud of text around a clicked point (instead of requiring users to create a selection rectangle)
+
 These features could help users who are not able to finely create selection rectangles or to finaly select all text of interest (e.g. users with impaired fine motor control) to use the service.
 The "Android Select to Speak" service implements these features.
 
 ## UI
 - The UI button ("Start") should be movable by the user around the screen, to avoid covering potential areas of interest
-The "Android Select to Speak" service implements this feature.
 - The UI should enable to stop the TTS-engine (e.g. if a very large section of text has been selected, which is not of interest any longer)
 - Potentially, pause/rewind features could be implemented as well
+- Highlight word by word as they're being spoken out loud
+
 The "Android Select to Speak" service implements these features.
-- Highlight word by word as they're being spoken out loud.
-The "Android Select to Speak" service implements this feature.
 
 ## Language and Locale
 - Select the locale of the TTS-engine
