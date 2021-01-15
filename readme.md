@@ -10,6 +10,7 @@ email:  hackahealth.geneva@gmail.com
 # Information
 ## Description
 "ChiaraSelect2Speak" is an Android accessibility service that allows to read out loud the text inside a user-selected area of the screen, to give users with reading difficulties access to written content on their Android screens.
+
 When active, the service overlays on top of any visible content on the screen, and it uses screenshots, OCR and TTS functionalities to recognize and speak out loud the text.
 
 The service is inspired by the super cool Android "Select to Speak" accessibility service (https://support.google.com/accessibility/android/answer/7349565?hl=en).
