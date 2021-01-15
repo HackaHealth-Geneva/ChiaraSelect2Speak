@@ -27,11 +27,11 @@ Read a summary post of the inspiration behind this project here: https://www.lin
 A video showing the functioning of the service is available here: https://youtu.be/mUp831sS0lo
 
 The service works as follows:
-(1) The user activates the service from the Accessibility Settings of the Android device
-(2) Once active, a "Start" button is shown on top of other apps
-(3) When the user presses the "Start" button, the service takes a screenshot of the whole screen
-(4) The user can then drags his/her finger on the screen to draw a selection rectangle around the area of interest. A simple UI shows the rectangle being drawn
-(5) The service crops the screenshot to the area of interest, it applies OCR to recognize the text inside the cropped image, and then TTS to speak out loud the recognized text
+- The user activates the service from the Accessibility Settings of the Android device
+- Once active, a "Start" button is shown on top of other apps
+- When the user presses the "Start" button, the service takes a screenshot of the whole screen
+- The user can then drags his/her finger on the screen to draw a selection rectangle around the area of interest. A simple UI shows the rectangle being drawn
+- The service crops the screenshot to the area of interest, it applies OCR to recognize the text inside the cropped image, and then TTS to speak out loud the recognized text
 
 The service was successfully tested under:
 - Galaxy Tab A (2016) [SM-T585]
