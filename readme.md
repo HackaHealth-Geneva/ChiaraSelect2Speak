@@ -9,57 +9,58 @@ email:  hackahealth.geneva@gmail.com
 
 # Information
 ## Description
-"ChiaraSelect2Speak" is an Android accessibility service that enables to read out loud the text inside a user-selected area of the screen.
-When active, the service overlays on top of any visible content on the screen, allowing to transform text it into a spoken message through OCR and TTS functionalities.
+"ChiaraSelect2Speak" is an Android accessibility service that allows to read out loud the text inside a user-selected area of the screen, to give users with reading difficulties access to written content on their Android screens.
+When active, the service overlays on top of any visible content on the screen, and it uses screenshots, OCR and TTS functionalities to recognize and speak out loud the text.
 
 The service is inspired by the super cool Android "Select to Speak" accessibility service (https://support.google.com/accessibility/android/answer/7349565?hl=en).
-However, differently than the latter, this service as well enables to read text which is not directly exposed to the Android operating system, e.g. the text inside apps and videogames.
+Differenlty than the latter, our service enables to process also text that is not directly exposed to the Android operating system (e.g. text inside apps, images, and videogames).
 
 The project is hosted here: https://github.com/HackaHealth-Geneva/ChiaraSelect2Speak
 
 ## Inspiration
-I developed this service to enable my sister, Chiara, to independently play with her favourite videogames.
+I developed this service to enable my sister, Chiara, to independently play with her favourite videogames and understand the content of the text inside them :)
 
 Read a summary post of the inspiration behind this project here: https://www.linkedin.com/feed/update/urn:li:activity:6668395321850134528/ <3
 
 # Functioning
-Demo video: https://youtu.be/mUp831sS0lo
+A video showing the functioning of the service is available here: https://youtu.be/mUp831sS0lo
 
 The service works as follows:
-- The user activates the service from the Accessibility Settings of the Android device
-- Once active, a "Start" button is showed on top of other apps
-- When the user presses the button, the service takes a screenshot of the whole screen
-- The screenshot is overlayed on top of the screen
-- The user can then drags his/her finger on the screen to draw a selection rectangle around the area of interest. A simple UI shows the rectangle being drawn
-- The service crops the screenshot to the area of interest, and it applies OCR and TTS in order to recognize the text inside the cropped image and speak it out loud
+(1) The user activates the service from the Accessibility Settings of the Android device
+(2) Once active, a "Start" button is shown on top of other apps
+(3) When the user presses the "Start" button, the service takes a screenshot of the whole screen
+(4) The user can then drags his/her finger on the screen to draw a selection rectangle around the area of interest. A simple UI shows the rectangle being drawn
+(5) The service crops the screenshot to the area of interest, it applies OCR to recognize the text inside the cropped image, and then TTS to speak out loud the recognized text
 
-The service has been successfully tested under:
+The service was successfully tested under:
 - Galaxy Tab A (2016) [SM-T585]
 - Android: 8.10 (Oreo) [API level: 27]
-- Compiled with Android Studio 4.0.1
+The service was compiled with Android Studio 4.0.1
 
 # ToDo
-Below, some ideas for improvement of this service are provided.
+Some ideas for improvement are provided below.
 
 ## OCR
-- Automated speaking of text within an area of interest also if not all of the text has been selected by the user (or if the user clicked on the text instead of creating a selection rectangle).
-This could help users who are not able to finely create a selection rectangle (e.g. with impaired fine motor control) to use the service.
-The "Android Select to Speak" service implements this feature.
+- "Intelligent" speaking-out-loud of text "around" the user-selected area of interest
+- Speaking-out-loud of text around a clicked point (instead of requiring users to create a selection rectangle)
+These features could help users who are not able to finely create selection rectangles or to finaly select all text of interest (e.g. users with impaired fine motor control) to use the service.
+The "Android Select to Speak" service implements these features.
 
 ## UI
-- The UI button ("Start") should be movable by the user around the screen, not to cover potential areas of interest.
+- The UI button ("Start") should be movable by the user around the screen, to avoid covering potential areas of interest
 The "Android Select to Speak" service implements this feature.
-- The UI should enable to Stop the TTS-engine (e.g. if a very large section of text has been selected, which is not of interest any longer). Potentially, Pause/Rewind features could be implemented as well.
-The "Android Select to Speak" service implements this feature.
+- The UI should enable to stop the TTS-engine (e.g. if a very large section of text has been selected, which is not of interest any longer)
+- Potentially, pause/rewind features could be implemented as well
+The "Android Select to Speak" service implements these features.
 - Highlight word by word as they're being spoken out loud.
 The "Android Select to Speak" service implements this feature.
 
 ## Language and Locale
-- Select the locale of the TTS-engine.
-- Provide error messages and debug information to the user through the TTS-engine in the selected locale.
+- Select the locale of the TTS-engine
+- Provide error messages and debug information to the user through the TTS-engine in the selected locale
 
 ## Goodies
-- Select welcome message by TTS-engine.
+- Select welcome message by TTS-engine
 
 # Resources
 Many freely-available resources were used for the development of this service.
