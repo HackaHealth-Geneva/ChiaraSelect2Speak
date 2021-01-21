@@ -13,8 +13,8 @@ email:  hackahealth.geneva@gmail.com
 
 When active, the service overlays on top of any visible content on the screen, and it uses screenshots, OCR and TTS functionalities to recognize and speak out loud the text.
 
-The service is inspired by the super cool Android "Select to Speak" accessibility service (https://support.google.com/accessibility/android/answer/7349565?hl=en).
-Hwoever, "ChiaraSelect2Speak" enables as well to read text that is not directly exposed to the Android operating system (e.g. text inside apps, images, and videogames).
+"ChiaraSelect2Speak" is inspired by the super cool "Android Select to Speak" accessibility service (https://support.google.com/accessibility/android/answer/7349565?hl=en), and it adds some cool functionalities on top of it.
+This service enables indeed to read also text that is not directly exposed to the Android operating system (e.g. text inside apps, images, and videogames) - recognizing text not accessible to "Android Select to Speak".
 
 The project is hosted here: https://github.com/HackaHealth-Geneva/ChiaraSelect2Speak
 
