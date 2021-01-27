@@ -9,12 +9,12 @@ email:  hackahealth.geneva@gmail.com
 
 # Information
 ## Description
-"ChiaraSelect2Speak" is an Android accessibility service that allows to read out loud the text inside a user-selected area of the screen, to give users with reading difficulties access to written content on their Android screens.
+"ChiaraSelect2Speak" is an Android accessibility service that allows to read aloud the text displayed on the screen, to ease access for users with reading difficulties.
 
-When active, the service overlays on top of any visible content on the screen, and it uses screenshots, OCR and TTS functionalities to recognize and speak out loud the text.
+When active, the service overlays on top of any visible content on the screen, and it uses screenshots, OCR and TTS functionalities to recognize and read aloud the text insie a user-selected area.
 
-"ChiaraSelect2Speak" is inspired by the super cool "Android Select to Speak" accessibility service (https://support.google.com/accessibility/android/answer/7349565?hl=en), and it adds some cool functionalities on top of it.
-This service enables indeed to read also text that is not directly exposed to the Android operating system (e.g. text inside apps, images, and videogames) - recognizing text not accessible to "Android Select to Speak".
+This service is inspired by the super cool "Android Select to Speak" (https://support.google.com/accessibility/android/answer/7349565?hl=en), and it builds some cool functionalities on top of that.
+"ChiaraSelect2Speak" enables indeed to recognize and read aloud also the text that is not directly exposed to the Android operating system (e.g. text inside apps, images, and videogames) - hence being capable to process text not accessible through "Android Select to Speak".
 
 The project is hosted here: https://github.com/HackaHealth-Geneva/ChiaraSelect2Speak
 
@@ -24,9 +24,9 @@ I developed this service to enable my sister, Chiara, to independently play with
 Read a summary post of the inspiration behind this project here: https://www.linkedin.com/feed/update/urn:li:activity:6668395321850134528/ <3
 
 # Functioning
-A video showing the functioning of the service is available here: https://youtu.be/mUp831sS0lo
+A video showing how this service works is available here: https://youtu.be/mUp831sS0lo
 
-The service works as follows:
+In short:
 - The user activates the service from the Accessibility Settings of the Android device
 - Once active, a "Start" button is shown on top of other apps
 - When the user presses the "Start" button, the service takes a screenshot of the whole screen
@@ -40,7 +40,7 @@ The service was successfully tested under:
 The service was compiled with Android Studio 4.0.1
 
 # ToDo
-Some ideas for improvement are provided below.
+Some ideas for improvement are given below.
 
 ## OCR
 - "Intelligent" speaking-out-loud of text "around" the user-selected area of interest
