@@ -20,7 +20,7 @@ The project is hosted here: https://github.com/HackaHealth-Geneva/ChiaraSelect2S
 ## Inspiration
 I developed this service to enable my sister, Chiara, to independently play with her favourite videogames without asking help to read their text to anyone :)
 
-Read a summary post of the inspiration behind this project here: https://www.linkedin.com/feed/update/urn:li:activity:6668395321850134528/ <3
+Read and watch a summary of the inspiration behind this project here: https://www.linkedin.com/feed/update/urn:li:activity:6668395321850134528/ <3
 
 # Functioning
 A video showing how this service works is available here: https://youtu.be/mUp831sS0lo
