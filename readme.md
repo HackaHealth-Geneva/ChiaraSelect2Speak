@@ -18,7 +18,7 @@ This service is inspired by the super cool "Android Select to Speak" (https://su
 The project is hosted here: https://github.com/HackaHealth-Geneva/ChiaraSelect2Speak
 
 ## Inspiration
-I developed this service to enable my sister, Chiara, to independently play with her favourite videogames without asking help to read their text to anyone :)
+I developed this service to enable my sister, Chiara, to independently play with her favourite videogames - without the need of asking help to read the text to anyone :)
 
 Read and watch a summary of the inspiration behind this project here: https://www.linkedin.com/feed/update/urn:li:activity:6668395321850134528/ <3
 
